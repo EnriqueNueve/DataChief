@@ -1,7 +1,7 @@
 import pandas as pd
-import numpy as np
 from pandas.api.types import is_numeric_dtype
 import multiprocessing as mp
+from itertools import combinations
 
 
 ##############################################
@@ -16,13 +16,22 @@ class searchEngine:
         self.data_info = {}
 
     @classmethod
-    def makeEngine(cls, df: pd.DataFrame, parallel: bool = False):
+    def makeEngine_Fit(cls, df: pd.DataFrame, n_combo: int, parallel: bool = False):
         # This acts as an alternative constructor
         engine = cls(parallel)
-        engine.fitData(df)
+        engine.fitData(df,n_combo)
         return engine
 
-    def fitData(self, df: pd.DataFrame):
+    def makeCombos(self, n_combo):
+        names = list(self.data_info.keys())
+        names.sort()
+        self.data_names = names
+
+        self.data_names_combos = combinations(self.data_names, n_combo)
+        print("Combos of variables that can be checked:")
+        [print(combo) for i, combo in enumerate(self.data_names_combos)]
+
+    def fitData(self, df: pd.DataFrame, n_combo: int):
         # Check if all columns is number value
         cols = df.columns
         if all([is_numeric_dtype(df[col]) for i, col in enumerate(cols)]) == False:
@@ -31,12 +40,18 @@ class searchEngine:
         column_names = self.data.columns.to_list()
         column_dtypes = self.data.dtypes.to_list()
         for i, col in enumerate(column_names):
-            self.data_info[col] = [i,column_dtypes[i]]
+            self.data_info[col] = [i, column_dtypes[i]]
 
-engine = searchEngine()
-engine.fitData(pd.read_csv("../TestData/so2_chicago_data.txt"))
-print(engine.data_info)
+        if isinstance(n_combo, int) != True:
+            raise TypeError("Value passed for n_combo to fitData() needs to be type int.")
 
+        self.makeCombos(n_combo)
+
+
+engine_A = searchEngine()
+engine_A.fitData(pd.read_csv("../TestData/so2_chicago_data.txt"), 2)
+
+engine_B = searchEngine.makeEngine_Fit(pd.read_csv("../TestData/so2_chicago_data.txt"), 2)
 
 ##############################################
 # Notes for OOP in Python
