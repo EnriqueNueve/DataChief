@@ -8,7 +8,7 @@ import pandas as pd
 
 ##############################################
 
-class TestAugmentLinear(unittest.TestCase):
+class TestSearchEngine(unittest.TestCase):
     # @classmethod will affect all objects of class, modify one object, it modifies all
     # cls. field can be called as self. from any method
     @classmethod

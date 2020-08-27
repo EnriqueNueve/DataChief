@@ -13,6 +13,7 @@ class searchEngine:
     def __init__(self, parallel: bool = False):
         self.parallel = parallel
         self.data = None
+        self.data_info = {}
 
     @classmethod
     def makeEngine(cls, df: pd.DataFrame, parallel: bool = False):
@@ -27,6 +28,14 @@ class searchEngine:
         if all([is_numeric_dtype(df[col]) for i, col in enumerate(cols)]) == False:
             raise ValueError("The passed df has none numeric dtypes. All columns must  be numeric.")
         self.data = df
+        column_names = self.data.columns.to_list()
+        column_dtypes = self.data.dtypes.to_list()
+        for i, col in enumerate(column_names):
+            self.data_info[col] = [i,column_dtypes[i]]
+
+engine = searchEngine()
+engine.fitData(pd.read_csv("../TestData/so2_chicago_data.txt"))
+print(engine.data_info)
 
 
 ##############################################
