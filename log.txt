@@ -1,0 +1,6 @@
+
+Log 1: 08/15/2020
+[done] 1. watch oop series
+[done] 2. work on SearchEngine class with child GridSearchEngine
+[ ] 3. connect github to pycharm
+
